@@ -14,7 +14,7 @@ fn main() {
     if args.contains(&String::from("-v")) {
         verbose = true;
     }
-    let mut cpu = CPU::new(String::from("DMG_ROM.bin"), verbose);
 
+    let mut cpu = CPU::new(args.get(1).unwrap().to_string(), verbose);
     cpu.run();
 }

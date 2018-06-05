@@ -6,13 +6,13 @@ pub enum Instructions {
     Unknown
 }
 
-pub static instructions: [(u8, &'static str, &'static str, Instructions); 2] = [
+pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 2] = [
     (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LDSP16),
     (0xaf, "XOR A", "XOR A", Instructions::XORA),
 ];
 
 fn find_instruction(instr: u8) -> &'static (u8, &'static str, &'static str, Instructions) {
-    for instruction in instructions.iter() {
+    for instruction in INSTRUCTIONS.iter() {
         if instr == instruction.0 {
             return instruction;
         }
