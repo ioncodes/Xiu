@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::Read;
-use instructions::{Instructions, get_instruction, get_debug, get_prefixed_instruction};
+use instructions::{Instructions, get_instruction, get_debug, get_prefixed_instruction, get_prefixed_debug};
 use registers::Registers;
 use memory::Memory;
 
@@ -44,17 +44,25 @@ impl CPU {
                 Instructions::XOR_A => self.xora(),
                 Instructions::LD_HL_D16 => self.ld_hl_d16(),
                 Instructions::LD_HLD_A => self.ld_hld_a(),
+                Instructions::BIT_7_H => self.bit_h(7),
                 Instructions::Unknown => panic!("0x{:x} Unknown opcode!", opcode)
             };
-            if self.verbose && !prefixed {
+            if self.verbose && *instruction != Instructions::Prefixed {
                 if data.is_some() {
-                    println!("{:?}", get_debug(opcode, data.unwrap()));
+                    if prefixed {
+                        println!("{:?}", get_prefixed_debug(opcode, data.unwrap()));
+                        prefixed = false;
+                    } else {
+                        println!("{:?}", get_debug(opcode, data.unwrap()));
+                    }
                 } else {
-                    println!("{:?}", get_debug(opcode, vec![]));
+                    if prefixed {
+                        println!("{:?}", get_prefixed_debug(opcode, vec![]));
+                        prefixed = false;
+                    } else {
+                        println!("{:?}", get_debug(opcode, vec![]));
+                    }
                 }
-            }
-            if prefixed {
-                prefixed = false;
             }
         }
     }
@@ -93,6 +101,17 @@ impl CPU {
 
     fn xora(&mut self) -> Option<Vec<usize>> {
         self.memory.clear_vram();
+        None
+    }
+
+    fn bit_h(&mut self, bit: u8) -> Option<Vec<usize>> {
+        let h = self.registers.get_h();
+        let n = self.registers.get_bit(h, bit);
+        if n == 0 {
+            self.registers.set_flag_z(1);
+        }
+        self.registers.set_flag_n(0);
+        self.registers.set_flag_h(1);
         None
     }
 }

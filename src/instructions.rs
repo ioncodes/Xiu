@@ -1,15 +1,15 @@
 // http://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
 // http://www.devrs.com/gb/files/GBCPU_Instr.html
 
-use cpu::CPU;
-
 #[allow(non_camel_case_types)]
+#[derive(PartialEq)]
 pub enum Instructions {
     LD_SP_D16,
     LD_HL_D16,
     LD_HLD_A,
     XOR_A,
     Prefixed,
+    BIT_7_H,
     Unknown
 }
 
@@ -21,8 +21,8 @@ pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 5] = [
     (0xaf, "XOR A", "XOR A", Instructions::XOR_A),
 ];
 
-pub static PREFIXED: [(u8, &'static str, &'static str, Instructions); 0] = [
-
+pub static PREFIXED: [(u8, &'static str, &'static str, Instructions); 1] = [
+    (0x7c, "BIT 7, H", "BIT 7, H", Instructions::BIT_7_H),
 ];
 
 fn find_instruction(instr: u8) -> &'static (u8, &'static str, &'static str, Instructions) {
@@ -48,8 +48,22 @@ pub fn get_assembly(instr: u8) -> String {
     String::from(i.1)
 }
 
+pub fn get_prefixed_assembly(instr: u8) -> String {
+    let i = find_prefixed_instruction(instr);
+    String::from(i.1)
+}
+
 pub fn get_debug(instr: u8, data: Vec<usize>) -> String {
     let i = find_instruction(instr);
+    let mut val = String::from(i.2);
+    for d in data {
+        val = val.replacen("{}", &format!("{:x}", d), 1)
+    }
+    val
+}
+
+pub fn get_prefixed_debug(instr: u8, data: Vec<usize>) -> String {
+    let i = find_prefixed_instruction(instr);
     let mut val = String::from(i.2);
     for d in data {
         val = val.replacen("{}", &format!("{:x}", d), 1)

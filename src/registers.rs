@@ -3,7 +3,6 @@ pub struct Registers {
     pub bc: BC,
     pub de: DE,
     pub hl: HL,
-    pub flags: u8,
     pub sp: u16,
     pub pc: u16,
 }
@@ -64,7 +63,6 @@ impl Registers {
             hl: HL {
                 pair: HLPair { h: 0, l: 0 },
             },
-            flags: 0,
             sp: 0,
             pc: 0,
         }
@@ -146,6 +144,62 @@ impl Registers {
         unsafe {
             self.hl.hl -= 1;
         }
+    }
+
+    pub fn set_bit(&mut self, byte: u8, bit: u8, n: u8) -> u8 {
+        byte ^ ((bit ^ byte) & (1 << n))
+    }
+
+    pub fn set_flag_z(&mut self, bit: u8) {
+        let f = self.get_f();
+        unsafe {
+            self.af.pair.f = self.set_bit(f, bit, 7);
+        }
+    }
+
+    pub fn set_flag_n(&mut self, bit: u8) {
+        let f = self.get_f();
+        unsafe {
+            self.af.pair.f = self.set_bit(f, bit, 6);
+        }
+    }
+
+    pub fn set_flag_h(&mut self, bit: u8) {
+        let f = self.get_f();
+        unsafe {
+            self.af.pair.f = self.set_bit(f, bit, 5);
+        }
+    }
+
+    pub fn set_flag_c(&mut self, bit: u8) {
+        let f = self.get_f();
+        unsafe {
+            self.af.pair.f = self.set_bit(f, bit, 4);
+        }
+    }
+
+    pub fn get_bit(&self, byte: u8, bit: u8) -> u8 {
+        (byte & ( 1 << bit )) >> bit
+    }
+
+    pub fn get_flag_z(&self) -> u8 {
+        let f = self.get_f();
+        self.get_bit(f, 7)
+    }
+
+    pub fn get_flag_n(&self) -> u8 {
+        let f = self.get_f();
+        self.get_bit(f, 6)
+    }
+
+    pub fn get_flag_h(&self) -> u8 {
+        let f = self.get_f();
+        self.get_bit(f, 5)
+    }
+
+    pub fn get_flag_c(&self) -> u8 {
+        let f = self.get_f();
+        self.get_bit(f, 4)
     }
 
     pub fn step(&mut self, length: usize) {
