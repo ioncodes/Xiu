@@ -1,24 +1,41 @@
 // http://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
 // http://www.devrs.com/gb/files/GBCPU_Instr.html
 
+use cpu::CPU;
+
 #[allow(non_camel_case_types)]
 pub enum Instructions {
     LD_SP_D16,
     LD_HL_D16,
     LD_HLD_A,
     XOR_A,
+    Prefixed,
     Unknown
 }
 
-pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 4] = [
+pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 5] = [
     (0x21, "LD HL, d16", "LD HL, ${}", Instructions::LD_HL_D16),
     (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LD_SP_D16),
     (0x32, "LD (HL-), A", "LD (HL-), A", Instructions::LD_HLD_A),
+    (0xcb, "", "", Instructions::Prefixed),
     (0xaf, "XOR A", "XOR A", Instructions::XOR_A),
+];
+
+pub static PREFIXED: [(u8, &'static str, &'static str, Instructions); 0] = [
+
 ];
 
 fn find_instruction(instr: u8) -> &'static (u8, &'static str, &'static str, Instructions) {
     for instruction in INSTRUCTIONS.iter() {
+        if instr == instruction.0 {
+            return instruction;
+        }
+    }
+    &(0x00, "", "", Instructions::Unknown)
+}
+
+fn find_prefixed_instruction(instr: u8) -> &'static (u8, &'static str, &'static str, Instructions) {
+    for instruction in PREFIXED.iter() {
         if instr == instruction.0 {
             return instruction;
         }
@@ -42,5 +59,10 @@ pub fn get_debug(instr: u8, data: Vec<usize>) -> String {
 
 pub fn get_instruction(instr: u8) -> &'static Instructions {
     let i = find_instruction(instr);
+    &i.3
+}
+
+pub fn get_prefixed_instruction(instr: u8) -> &'static Instructions {
+    let i = find_prefixed_instruction(instr);
     &i.3
 }

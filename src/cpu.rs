@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::io::Read;
-use instructions::{Instructions, get_instruction, get_debug};
+use instructions::{Instructions, get_instruction, get_debug, get_prefixed_instruction};
 use registers::Registers;
 use memory::Memory;
 
@@ -29,33 +29,43 @@ impl CPU {
     }
 
     pub fn run(&mut self) {
+        let mut prefixed = false;
         loop {
             let opcode = self.read_8();
-            let instruction = get_instruction(opcode);
+            let instruction: &Instructions;
+            if !prefixed {
+                instruction = get_instruction(opcode);
+            } else {
+                instruction = get_prefixed_instruction(opcode);
+            }
             let data = match instruction {
+                Instructions::Prefixed => { prefixed = true; None },
                 Instructions::LD_SP_D16 => self.ld_sp_d16(),
                 Instructions::XOR_A => self.xora(),
                 Instructions::LD_HL_D16 => self.ld_hl_d16(),
                 Instructions::LD_HLD_A => self.ld_hld_a(),
                 Instructions::Unknown => panic!("0x{:x} Unknown opcode!", opcode)
             };
-            if self.verbose {
+            if self.verbose && !prefixed {
                 if data.is_some() {
                     println!("{:?}", get_debug(opcode, data.unwrap()));
                 } else {
                     println!("{:?}", get_debug(opcode, vec![]));
                 }
             }
+            if prefixed {
+                prefixed = false;
+            }
         }
     }
 
-    fn read_8(&mut self) -> u8 {
+    pub fn read_8(&mut self) -> u8 {
         let byte = self.rom[self.registers.pc as usize];
         self.registers.step(1);
         byte
     }
 
-    fn read_16(&mut self) -> u16 {
+    pub fn read_16(&mut self) -> u16 {
         let x = self.read_8();
         let y = self.read_8();
         (y as u16) << 8 | x as u16
