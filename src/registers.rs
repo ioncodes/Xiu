@@ -70,9 +70,9 @@ impl Registers {
         }
     }
 
-    pub fn get_af(&mut self) -> &u16 {
+    pub fn get_af(&mut self) -> u16 {
         unsafe {
-            &self.af.af
+            self.af.af
         }
     }
 
@@ -88,9 +88,9 @@ impl Registers {
         }
     }
 
-    pub fn get_bc(&mut self) -> &u16 {
+    pub fn get_bc(&mut self) -> u16 {
         unsafe {
-            &self.bc.bc
+            self.bc.bc
         }
     }
 
@@ -106,9 +106,9 @@ impl Registers {
         }
     }
 
-    pub fn get_de(&mut self) -> &u16 {
+    pub fn get_de(&mut self) -> u16 {
         unsafe {
-            &self.de.de
+            self.de.de
         }
     }
 
@@ -124,9 +124,9 @@ impl Registers {
         }
     }
 
-    pub fn get_hl(&mut self) -> &u16 {
+    pub fn get_hl(&mut self) -> u16 {
         unsafe {
-            &self.hl.hl
+            self.hl.hl
         }
     }
 
@@ -139,6 +139,12 @@ impl Registers {
     pub fn get_l(&self) -> u8 {
         unsafe {
             self.hl.pair.l
+        }
+    }
+
+    pub fn dec_hl(&mut self) {
+        unsafe {
+            self.hl.hl -= 1;
         }
     }
 

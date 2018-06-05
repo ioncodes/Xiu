@@ -1,16 +1,20 @@
 // http://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
+// http://www.devrs.com/gb/files/GBCPU_Instr.html
 
+#[allow(non_camel_case_types)]
 pub enum Instructions {
-    LDSP16,
-    LDHL16,
-    XORA,
+    LD_SP_D16,
+    LD_HL_D16,
+    LD_HLD_A,
+    XOR_A,
     Unknown
 }
 
-pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 3] = [
-    (0x21, "LD HL, d16", "LD HL, ${}", Instructions::LDHL16),
-    (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LDSP16),
-    (0xaf, "XOR A", "XOR A", Instructions::XORA),
+pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 4] = [
+    (0x21, "LD HL, d16", "LD HL, ${}", Instructions::LD_HL_D16),
+    (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LD_SP_D16),
+    (0x32, "LD (HL-), A", "LD (HL-), A", Instructions::LD_HLD_A),
+    (0xaf, "XOR A", "XOR A", Instructions::XOR_A),
 ];
 
 fn find_instruction(instr: u8) -> &'static (u8, &'static str, &'static str, Instructions) {

@@ -33,9 +33,10 @@ impl CPU {
             let opcode = self.read_8();
             let instruction = get_instruction(opcode);
             let data = match instruction {
-                Instructions::LDSP16 => self.ld_sp_d16(),
-                Instructions::XORA => self.xora(),
-                Instructions::LDHL16 => self.ld_hl_d16(),
+                Instructions::LD_SP_D16 => self.ld_sp_d16(),
+                Instructions::XOR_A => self.xora(),
+                Instructions::LD_HL_D16 => self.ld_hl_d16(),
+                Instructions::LD_HLD_A => self.ld_hld_a(),
                 Instructions::Unknown => panic!("0x{:x} Unknown opcode!", opcode)
             };
             if self.verbose {
@@ -70,6 +71,14 @@ impl CPU {
         let data = self.read_16();
         self.registers.hl.hl = data;
         Some(vec![data as usize])
+    }
+
+    fn ld_hld_a(&mut self) -> Option<Vec<usize>> {
+        let hl = self.registers.get_hl();
+        let a = self.registers.get_a();
+        self.memory.write(hl as usize, a);
+        self.registers.dec_hl();
+        None
     }
 
     fn xora(&mut self) -> Option<Vec<usize>> {

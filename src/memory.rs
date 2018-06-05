@@ -29,4 +29,8 @@ impl Memory {
             self.buffer[i as usize] = 0;
         }
     }
+
+    pub fn write(&mut self, address: usize, byte: u8) {
+        self.buffer[address] = byte;
+    }
 }
