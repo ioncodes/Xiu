@@ -48,6 +48,7 @@ pub union HL {
     pub hl: u16,
 }
 
+#[allow(dead_code)]
 impl Registers {
     pub fn new() -> Registers {
         Registers {

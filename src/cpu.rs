@@ -35,6 +35,7 @@ impl CPU {
             let data = match instruction {
                 Instructions::LDSP16 => self.ld_sp_d16(),
                 Instructions::XORA => self.xora(),
+                Instructions::LDHL16 => self.ld_hl_d16(),
                 Instructions::Unknown => panic!("0x{:x} Unknown opcode!", opcode)
             };
             if self.verbose {
@@ -62,6 +63,12 @@ impl CPU {
     fn ld_sp_d16(&mut self) -> Option<Vec<usize>> {
         let data = self.read_16();
         self.registers.sp = data;
+        Some(vec![data as usize])
+    }
+
+    fn ld_hl_d16(&mut self) -> Option<Vec<usize>> {
+        let data = self.read_16();
+        self.registers.hl.hl = data;
         Some(vec![data as usize])
     }
 

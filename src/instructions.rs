@@ -2,11 +2,13 @@
 
 pub enum Instructions {
     LDSP16,
+    LDHL16,
     XORA,
     Unknown
 }
 
-pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 2] = [
+pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 3] = [
+    (0x21, "LD HL, d16", "LD HL, ${}", Instructions::LDHL16),
     (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LDSP16),
     (0xaf, "XOR A", "XOR A", Instructions::XORA),
 ];
