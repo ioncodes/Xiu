@@ -1,10 +1,14 @@
+// http://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
+
 pub enum Instructions {
     LDSP16,
+    XORA,
     Unknown
 }
 
-pub static instructions: [(u8, &'static str, &'static str, Instructions); 1] = [
+pub static instructions: [(u8, &'static str, &'static str, Instructions); 2] = [
     (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LDSP16),
+    (0xaf, "XOR A", "XOR A", Instructions::XORA),
 ];
 
 fn find_instruction(instr: u8) -> &'static (u8, &'static str, &'static str, Instructions) {
