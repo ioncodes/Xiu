@@ -1,5 +1,6 @@
 // http://www.pastraiser.com/cpu/gameboy/gameboy_opcodes.html
 // http://www.devrs.com/gb/files/GBCPU_Instr.html
+// http://www.devrs.com/gb/files/opcodes.html
 
 #[allow(non_camel_case_types)]
 #[derive(PartialEq)]
