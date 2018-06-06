@@ -49,6 +49,7 @@ impl CPU {
                 Instructions::LD_C_D8 => self.ld_c_d8(),
                 Instructions::LD_A_D8 => self.ld_a_d8(),
                 Instructions::LD_C_A => self.ld_c_a(),
+                Instructions::INC_C => self.inc_c(),
                 Instructions::Unknown => self.panic(opcode)
             };
             if self.verbose && *instruction != Instructions::Prefixed {
@@ -159,5 +160,11 @@ impl CPU {
             self.registers.step(signed_n);
         }
         Some(vec![n as usize])
+    }
+
+    fn inc_c(&mut self) -> Option<Vec<usize>> {
+        self.registers.inc_c();
+        // TODO: implement flags
+        None
     }
 }

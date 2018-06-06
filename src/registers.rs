@@ -214,6 +214,12 @@ impl Registers {
         }
     }
 
+    pub fn inc_c(&mut self) {
+        unsafe {
+            self.bc.pair.c += 1;
+        }
+    }
+
     pub fn set_bit(&mut self, byte: u8, n: u8) -> u8 {
         byte | 1 << n
     }
