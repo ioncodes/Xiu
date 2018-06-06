@@ -95,7 +95,7 @@ impl CPU {
 
     fn ld_hl_d16(&mut self) -> Option<Vec<usize>> {
         let data = self.read_16();
-        self.registers.hl.hl = data;
+        self.registers.set_hl(data);
         Some(vec![data as usize])
     }
 
@@ -109,9 +109,7 @@ impl CPU {
 
     fn ld_c_d8(&mut self) -> Option<Vec<usize>> {
         let byte = self.read_8();
-        unsafe {
-            self.registers.bc.pair.c = byte;
-        }
+        self.registers.set_c(byte);
         None
     }
 
