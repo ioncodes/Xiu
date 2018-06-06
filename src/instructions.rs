@@ -16,10 +16,10 @@ pub enum Instructions {
 }
 
 pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 6] = [
+    (0xcb, "", "", Instructions::Prefixed),
     (0x21, "LD HL, d16", "LD HL, ${}", Instructions::LD_HL_D16),
     (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LD_SP_D16),
     (0x32, "LD (HL-), A", "LD (HL-), A", Instructions::LD_HLD_A),
-    (0xcb, "", "", Instructions::Prefixed),
     (0xaf, "XOR A", "XOR A", Instructions::XOR_A),
     (0x20, "JR NZ, r8", "JR NZ, ${}", Instructions::JR_NZ_8),
 ];
