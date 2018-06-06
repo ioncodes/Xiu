@@ -110,11 +110,18 @@ impl CPU {
     fn ld_c_d8(&mut self) -> Option<Vec<usize>> {
         let byte = self.read_8();
         self.registers.set_c(byte);
-        None
+        Some(vec![byte as usize])
     }
 
     fn xora(&mut self) -> Option<Vec<usize>> {
-        self.memory.clear_vram();
+        let result = self.registers.get_a() ^ self.registers.get_a();
+        if result == 0 {
+            self.registers.set_flag_z();
+        }
+        self.registers.set_a(result);
+        self.registers.clear_flag_n();
+        self.registers.clear_flag_h();
+        self.registers.clear_flag_c();
         None
     }
 
