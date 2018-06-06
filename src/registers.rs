@@ -144,6 +144,70 @@ impl Registers {
         }
     }
 
+    pub fn set_af(&mut self, data: u16) {
+        self.af.af = data;
+    }
+
+    pub fn set_a(&mut self, byte: u8) {
+        unsafe {
+            self.af.pair.a = byte;
+        }
+    }
+
+    pub fn set_f(&mut self, byte: u8) {
+        unsafe {
+            self.af.pair.f = byte;
+        }
+    }
+
+    pub fn set_bc(&mut self, data: u16) {
+        self.bc.bc = data;
+    }
+
+    pub fn set_b(&mut self, byte: u8) {
+        unsafe {
+            self.bc.pair.b = byte;
+        }
+    }
+
+    pub fn set_c(&mut self, byte: u8) {
+        unsafe {
+            self.bc.pair.c = byte;
+        }
+    }
+
+    pub fn set_de(&mut self, data: u16) {
+        self.de.de = data;
+    }
+
+    pub fn set_d(&mut self, byte: u8) {
+        unsafe {
+            self.de.pair.d = byte;
+        }
+    }
+
+    pub fn set_e(&mut self, byte: u8) {
+        unsafe {
+            self.de.pair.e = byte;
+        }
+    }
+
+    pub fn set_hl(&mut self, data: u16) {
+        self.hl.hl = data;
+    }
+
+    pub fn set_h(&mut self, byte: u8) {
+        unsafe {
+            self.hl.pair.h = byte;
+        }
+    }
+
+    pub fn set_l(&mut self, byte: u8) {
+        unsafe {
+            self.hl.pair.l = byte;
+        }
+    }
+
     pub fn dec_hl(&mut self) {
         unsafe {
             self.hl.hl -= 1;
