@@ -45,7 +45,8 @@ impl CPU {
                 Instructions::LD_HL_D16 => self.ld_hl_d16(),
                 Instructions::LD_HLD_A => self.ld_hld_a(),
                 Instructions::BIT_7_H => self.bit_h(7),
-                Instructions::Unknown => panic!("0x{:x} Unknown opcode!", opcode)
+                Instructions::JR_NZ_8 => self.jr_nz_8(),
+                Instructions::Unknown => self.panic(opcode)
             };
             if self.verbose && *instruction != Instructions::Prefixed {
                 if data.is_some() {
@@ -63,8 +64,14 @@ impl CPU {
                         println!("{:?}", get_debug(opcode, vec![]));
                     }
                 }
+                self.registers.dump();
             }
         }
+    }
+
+    fn panic(&mut self, opcode: u8) -> Option<Vec<usize>> {
+        self.registers.dump();
+        panic!("0x{:02x} Unknown opcode!", opcode);
     }
 
     pub fn read_8(&mut self) -> u8 {
@@ -108,10 +115,20 @@ impl CPU {
         let h = self.registers.get_h();
         let n = self.registers.get_bit(h, bit);
         if n == 0 {
-            self.registers.set_flag_z(1);
+            self.registers.set_flag_z();
         }
-        self.registers.set_flag_n(0);
-        self.registers.set_flag_h(1);
+        self.registers.clear_flag_n();
+        self.registers.set_flag_h();
         None
+    }
+
+    fn jr_nz_8(&mut self) -> Option<Vec<usize>> {
+        let n = self.read_8();
+        let z = self.registers.get_flag_z();
+        let signed_n = self.registers.to_signed_byte(n) as isize;
+        if z == 0 {
+            self.registers.step(signed_n);
+        }
+        Some(vec![n as usize])
     }
 }

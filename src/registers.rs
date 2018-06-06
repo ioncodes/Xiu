@@ -146,35 +146,67 @@ impl Registers {
         }
     }
 
-    pub fn set_bit(&mut self, byte: u8, bit: u8, n: u8) -> u8 {
-        byte ^ ((bit ^ byte) & (1 << n))
+    pub fn set_bit(&mut self, byte: u8, n: u8) -> u8 {
+        byte | 1 << n
     }
 
-    pub fn set_flag_z(&mut self, bit: u8) {
+    pub fn clear_bit(&mut self, byte: u8, n: u8) -> u8 {
+        byte & !(1 << n)
+    }
+
+    pub fn set_flag_z(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.set_bit(f, bit, 7);
+            self.af.pair.f = self.set_bit(f, 7);
         }
     }
 
-    pub fn set_flag_n(&mut self, bit: u8) {
+    pub fn clear_flag_z(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.set_bit(f, bit, 6);
+            self.af.pair.f = self.clear_bit(f, 7);
         }
     }
 
-    pub fn set_flag_h(&mut self, bit: u8) {
+    pub fn set_flag_n(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.set_bit(f, bit, 5);
+            self.af.pair.f = self.set_bit(f, 6);
         }
     }
 
-    pub fn set_flag_c(&mut self, bit: u8) {
+    pub fn clear_flag_n(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.set_bit(f, bit, 4);
+            self.af.pair.f = self.clear_bit(f, 6);
+        }
+    }
+
+    pub fn set_flag_h(&mut self) {
+        let f = self.get_f();
+        unsafe {
+            self.af.pair.f = self.set_bit(f,5);
+        }
+    }
+
+    pub fn clear_flag_h(&mut self) {
+        let f = self.get_f();
+        unsafe {
+            self.af.pair.f = self.clear_bit(f, 5);
+        }
+    }
+
+    pub fn set_flag_c(&mut self) {
+        let f = self.get_f();
+        unsafe {
+            self.af.pair.f = self.set_bit(f, 4);
+        }
+    }
+
+    pub fn clear_flag_c(&mut self) {
+        let f = self.get_f();
+        unsafe {
+            self.af.pair.f = self.clear_bit(f, 4);
         }
     }
 
@@ -202,7 +234,39 @@ impl Registers {
         self.get_bit(f, 4)
     }
 
-    pub fn step(&mut self, length: usize) {
-        self.pc += length as u16;
+    pub fn to_signed_byte(&self, byte: u8) -> i8 {
+        -((256 + (!byte + 1)) as i8)
+    }
+
+    pub fn step(&mut self, length: isize) {
+        self.pc = (self.pc as isize + length) as u16;
+    }
+
+    pub fn dump(&mut self) {
+        println!("A:  ${:02x}", self.get_a());
+        println!("B:  ${:02x}", self.get_b());
+        println!("C:  ${:02x}", self.get_c());
+        println!("D:  ${:02x}", self.get_d());
+        println!("E:  ${:02x}", self.get_e());
+        println!("F:  ${:02x}", self.get_f());
+        println!("H:  ${:02x}", self.get_h());
+        println!("L:  ${:02x}", self.get_l());
+        println!("AF: ${:02x}", self.get_af());
+        println!("BC: ${:02x}", self.get_bc());
+        println!("DE: ${:02x}", self.get_de());
+        println!("HL: ${:02x}", self.get_hl());
+        println!("PC: ${:02x}", self.pc);
+        println!("SP: ${:02x}", self.sp);
+        println!("ZNHC3210");
+        println!("{}{}{}{}{}{}{}{}",
+            self.get_flag_z(),
+            self.get_flag_n(),
+            self.get_flag_h(),
+            self.get_flag_c(),
+            self.get_bit(self.get_f(), 3),
+            self.get_bit(self.get_f(), 2),
+            self.get_bit(self.get_f(), 1),
+            self.get_bit(self.get_f(), 0)
+        );
     }
 }

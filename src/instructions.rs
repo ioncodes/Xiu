@@ -11,15 +11,17 @@ pub enum Instructions {
     XOR_A,
     Prefixed,
     BIT_7_H,
+    JR_NZ_8,
     Unknown
 }
 
-pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 5] = [
+pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 6] = [
     (0x21, "LD HL, d16", "LD HL, ${}", Instructions::LD_HL_D16),
     (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LD_SP_D16),
     (0x32, "LD (HL-), A", "LD (HL-), A", Instructions::LD_HLD_A),
     (0xcb, "", "", Instructions::Prefixed),
     (0xaf, "XOR A", "XOR A", Instructions::XOR_A),
+    (0x20, "JR NZ, r8", "JR NZ, ${}", Instructions::JR_NZ_8),
 ];
 
 pub static PREFIXED: [(u8, &'static str, &'static str, Instructions); 1] = [
@@ -58,7 +60,7 @@ pub fn get_debug(instr: u8, data: Vec<usize>) -> String {
     let i = find_instruction(instr);
     let mut val = String::from(i.2);
     for d in data {
-        val = val.replacen("{}", &format!("{:x}", d), 1)
+        val = val.replacen("{}", &format!("{:02x}", d), 1)
     }
     val
 }
@@ -67,7 +69,7 @@ pub fn get_prefixed_debug(instr: u8, data: Vec<usize>) -> String {
     let i = find_prefixed_instruction(instr);
     let mut val = String::from(i.2);
     for d in data {
-        val = val.replacen("{}", &format!("{:x}", d), 1)
+        val = val.replacen("{}", &format!("{:02x}", d), 1)
     }
     val
 }
