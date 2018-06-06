@@ -1,3 +1,7 @@
+/*
+    TODO: fix naming
+*/
+
 pub struct Registers {
     pub af: AF,
     pub bc: BC,
