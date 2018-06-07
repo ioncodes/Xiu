@@ -25,10 +25,12 @@ pub enum Instructions {
     CALL_A16,
     LD_C_A,
     LD_B_D8,
+    PUSH_BC,
+    RL_C,
     Unknown
 }
 
-pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 17] = [
+pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 18] = [
     (0xcb, "", "", Instructions::Prefixed),
     (0x21, "LD HL, d16", "LD HL, ${}", Instructions::LD_HL_D16),
     (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LD_SP_D16),
@@ -45,11 +47,13 @@ pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 17] = 
     (0x1a, "LD A, (DE)", "LD A, (DE)", Instructions::LD_A_DE),
     (0xcd, "CALL a16", "CALL ${}", Instructions::CALL_A16),
     (0x4f, "LD C, A", "LD C, A", Instructions::LD_C_A),
-    (0x06, "LD B, d8", "LD B, ${}", Instructions::LD_B_D8)
+    (0x06, "LD B, d8", "LD B, ${}", Instructions::LD_B_D8),
+    (0xc5, "PUSH BC", "PUSH BC", Instructions::PUSH_BC)
 ];
 
-pub static PREFIXED: [(u8, &'static str, &'static str, Instructions); 1] = [
+pub static PREFIXED: [(u8, &'static str, &'static str, Instructions); 2] = [
     (0x7c, "BIT 7, H", "BIT 7, H", Instructions::BIT_7_H),
+    (0x11, "RL C", "RL C", Instructions::RL_C)
 ];
 
 fn find_instruction(instr: u8) -> &'static (u8, &'static str, &'static str, Instructions) {

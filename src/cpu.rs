@@ -62,6 +62,8 @@ impl CPU {
                 Instructions::CALL_A16 => self.call_a16(),
                 Instructions::LD_C_A => self.ld_c_a(),
                 Instructions::LD_B_D8 => self.ld_x_d8(Register::B),
+                Instructions::PUSH_BC => self.push(Register::BC),
+                Instructions::RL_C => self.rl(Register::C),
                 Instructions::Unknown => self.panic(opcode)
             };
             if self.verbose && *instruction != Instructions::Prefixed {
@@ -106,6 +108,36 @@ impl CPU {
         let data = self.read_16();
         self.registers.sp = data;
         Some(vec![data as usize])
+    }
+
+    fn rl(&mut self, register: Register) -> Option<Vec<usize>> {
+        // TODO: implement this
+        /*
+        match register {
+            Register::A => ,
+            Register::B => ,
+            Register::C => ,
+            Register::D => ,
+            Register::E => ,
+            Register::F => ,
+            Register::H => ,
+            Register::L => ,
+            _ => panic!("Invalid register provided!"),
+        }
+        */
+        None
+    }
+
+    fn push(&mut self, register: Register) -> Option<Vec<usize>> {
+        match register {
+            Register::AF => self.stack.push(self.registers.get_af()),
+            Register::BC => self.stack.push(self.registers.get_bc()),
+            Register::DE => self.stack.push(self.registers.get_de()),
+            Register::HL => self.stack.push(self.registers.get_hl()),
+            _ => panic!("Invalid register provided!"),
+        }
+        self.registers.sp -= 2;
+        None
     }
 
     fn call_a16(&mut self) -> Option<Vec<usize>> {
