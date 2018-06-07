@@ -1,0 +1,6 @@
+pub enum Flags {
+    Z = 0x07,
+    N = 0x06,
+    H = 0x05,
+    C = 0x04,
+}

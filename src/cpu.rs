@@ -3,6 +3,7 @@ use std::io::Read;
 use instructions::{Instructions, get_instruction, get_debug, get_prefixed_instruction, get_prefixed_debug};
 use registers::Registers;
 use memory::{Memory, IO};
+use flags::Flags;
 
 pub struct CPU {
     rom: Vec<u8>,
@@ -44,7 +45,7 @@ impl CPU {
                 Instructions::XOR_A => self.xora(),
                 Instructions::LD_HL_D16 => self.ld_hl_d16(),
                 Instructions::LD_HLD_A => self.ld_hld_a(),
-                Instructions::BIT_7_H => self.bit_h(7),
+                Instructions::BIT_7_H => self.bit_h(Flags::Z as u8),
                 Instructions::JR_NZ_8 => self.jr_nz_8(),
                 Instructions::LD_C_D8 => self.ld_c_d8(),
                 Instructions::LD_A_D8 => self.ld_a_d8(),

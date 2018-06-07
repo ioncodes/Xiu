@@ -1,5 +1,6 @@
 #![feature(untagged_unions)]
 
+mod flags;
 mod registers;
 mod instructions;
 #[allow(dead_code)] // consts are mostly unused atm

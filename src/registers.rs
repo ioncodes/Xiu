@@ -1,7 +1,8 @@
 /*
     TODO: fix naming
-    TODO: expose flag enum with bit field
 */
+
+use flags::Flags;
 
 pub struct Registers {
     pub af: AF,
@@ -232,56 +233,56 @@ impl Registers {
     pub fn set_flag_z(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.set_bit(f, 7);
+            self.af.pair.f = self.set_bit(f, Flags::Z as u8);
         }
     }
 
     pub fn clear_flag_z(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.clear_bit(f, 7);
+            self.af.pair.f = self.clear_bit(f, Flags::Z as u8);
         }
     }
 
     pub fn set_flag_n(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.set_bit(f, 6);
+            self.af.pair.f = self.set_bit(f, Flags::N as u8);
         }
     }
 
     pub fn clear_flag_n(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.clear_bit(f, 6);
+            self.af.pair.f = self.clear_bit(f, Flags::N as u8);
         }
     }
 
     pub fn set_flag_h(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.set_bit(f,5);
+            self.af.pair.f = self.set_bit(f, Flags::H as u8);
         }
     }
 
     pub fn clear_flag_h(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.clear_bit(f, 5);
+            self.af.pair.f = self.clear_bit(f, Flags::H as u8);
         }
     }
 
     pub fn set_flag_c(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.set_bit(f, 4);
+            self.af.pair.f = self.set_bit(f, Flags::C as u8);
         }
     }
 
     pub fn clear_flag_c(&mut self) {
         let f = self.get_f();
         unsafe {
-            self.af.pair.f = self.clear_bit(f, 4);
+            self.af.pair.f = self.clear_bit(f, Flags::C as u8);
         }
     }
 
@@ -291,22 +292,22 @@ impl Registers {
 
     pub fn get_flag_z(&self) -> u8 {
         let f = self.get_f();
-        self.get_bit(f, 7)
+        self.get_bit(f, Flags::Z as u8)
     }
 
     pub fn get_flag_n(&self) -> u8 {
         let f = self.get_f();
-        self.get_bit(f, 6)
+        self.get_bit(f, Flags::N as u8)
     }
 
     pub fn get_flag_h(&self) -> u8 {
         let f = self.get_f();
-        self.get_bit(f, 5)
+        self.get_bit(f, Flags::H as u8)
     }
 
     pub fn get_flag_c(&self) -> u8 {
         let f = self.get_f();
-        self.get_bit(f, 4)
+        self.get_bit(f, Flags::C as u8)
     }
 
     pub fn to_signed_byte(&self, byte: u8) -> i8 {
