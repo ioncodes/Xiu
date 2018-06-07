@@ -156,6 +156,7 @@ impl CPU {
     }
 
     fn ld_a_de(&mut self) -> Option<Vec<usize>> {
+        // TODO: check this, i think it's wrong.
         let c = self.registers.get_c() as usize;
         let byte = self.memory.read((IO.0 as usize) + c);
         self.registers.set_a(byte);
