@@ -60,17 +60,17 @@ impl CPU {
             if self.verbose && *instruction != Instructions::Prefixed {
                 if data.is_some() {
                     if prefixed {
-                        println!("{:?}", get_prefixed_debug(opcode, data.unwrap()));
+                        println!("{}", get_prefixed_debug(opcode, data.unwrap()));
                         prefixed = false;
                     } else {
-                        println!("{:?}", get_debug(opcode, data.unwrap()));
+                        println!("{}", get_debug(opcode, data.unwrap()));
                     }
                 } else {
                     if prefixed {
-                        println!("{:?}", get_prefixed_debug(opcode, vec![]));
+                        println!("{}", get_prefixed_debug(opcode, vec![]));
                         prefixed = false;
                     } else {
-                        println!("{:?}", get_debug(opcode, vec![]));
+                        println!("{}", get_debug(opcode, vec![]));
                     }
                 }
                 //self.registers.dump();
