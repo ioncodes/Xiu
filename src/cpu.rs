@@ -54,6 +54,7 @@ impl CPU {
                 Instructions::LD_HL_A => self.ld_hl_a(),
                 Instructions::LDH_D8_A => self.ldh_d8_a(),
                 Instructions::LD_DE_D16 => self.ld_de_d16(),
+                Instructions::LD_A_DE => self.ld_a_de(),
                 Instructions::Unknown => self.panic(opcode)
             };
             if self.verbose && *instruction != Instructions::Prefixed {
@@ -152,6 +153,13 @@ impl CPU {
         let byte = self.read_8();
         self.registers.set_a(byte);
         Some(vec![byte as usize])
+    }
+
+    fn ld_a_de(&mut self) -> Option<Vec<usize>> {
+        let c = self.registers.get_c() as usize;
+        let byte = self.memory.read((IO.0 as usize) + c);
+        self.registers.set_a(byte);
+        None
     }
 
     fn xora(&mut self) -> Option<Vec<usize>> {

@@ -33,4 +33,8 @@ impl Memory {
     pub fn write(&mut self, address: usize, byte: u8) {
         self.buffer[address] = byte;
     }
+
+    pub fn read(&mut self, address: usize) -> u8 {
+        self.buffer[address]
+    }
 }
