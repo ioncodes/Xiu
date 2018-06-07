@@ -1,5 +1,6 @@
 /*
     TODO: fix naming
+    TODO: expose flag enum with bit field
 */
 
 pub struct Registers {
