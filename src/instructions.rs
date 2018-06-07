@@ -2,6 +2,8 @@
 // http://www.devrs.com/gb/files/GBCPU_Instr.html
 // http://www.devrs.com/gb/files/opcodes.html
 
+use std::u8;
+
 #[allow(non_camel_case_types)]
 #[derive(PartialEq)]
 pub enum Instructions {
@@ -76,8 +78,11 @@ pub fn get_debug(instr: u8, data: Vec<usize>) -> String {
     let i = find_instruction(instr);
     let mut val = String::from(i.2);
     for d in data {
-        // TODO: implement u8 and u16 formatting (02, 04)
-        val = val.replacen("{}", &format!("{:02x}", d), 1)
+        if d <= (u8::MAX as usize) {
+            val = val.replacen("{}", &format!("{:02x}", d), 1);
+        } else {
+            val = val.replacen("{}", &format!("{:04x}", d), 1);
+        }
     }
     val
 }
@@ -86,8 +91,11 @@ pub fn get_prefixed_debug(instr: u8, data: Vec<usize>) -> String {
     let i = find_prefixed_instruction(instr);
     let mut val = String::from(i.2);
     for d in data {
-        // TODO: implement u8 and u16 formatting (02, 04)
-        val = val.replacen("{}", &format!("{:02x}", d), 1)
+        if d <= (u8::MAX as usize) {
+            val = val.replacen("{}", &format!("{:02x}", d), 1);
+        } else {
+            val = val.replacen("{}", &format!("{:04x}", d), 1);
+        }
     }
     val
 }

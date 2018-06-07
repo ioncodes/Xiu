@@ -327,12 +327,12 @@ impl Registers {
         println!("F:  ${:02x}", self.get_f());
         println!("H:  ${:02x}", self.get_h());
         println!("L:  ${:02x}", self.get_l());
-        println!("AF: ${:02x}", self.get_af());
-        println!("BC: ${:02x}", self.get_bc());
-        println!("DE: ${:02x}", self.get_de());
-        println!("HL: ${:02x}", self.get_hl());
-        println!("PC: ${:02x}", self.pc);
-        println!("SP: ${:02x}", self.sp);
+        println!("AF: ${:04x}", self.get_af());
+        println!("BC: ${:04x}", self.get_bc());
+        println!("DE: ${:04x}", self.get_de());
+        println!("HL: ${:04x}", self.get_hl());
+        println!("PC: ${:04x}", self.pc);
+        println!("SP: ${:04x}", self.sp);
         println!("ZNHC3210");
         println!("{}{}{}{}{}{}{}{}",
             self.get_flag_z(),
