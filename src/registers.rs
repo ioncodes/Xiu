@@ -1,5 +1,20 @@
 use flags::Flags;
 
+pub enum Register {
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    H,
+    L,
+    AF,
+    BC,
+    DE,
+    HL,
+}
+
 pub struct Registers {
     pub af: AF,
     pub bc: BC,

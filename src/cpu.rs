@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::Read;
 use instructions::{Instructions, get_instruction, get_debug, get_prefixed_instruction, get_prefixed_debug};
-use registers::Registers;
+use registers::{Registers, Register};
 use memory::{Memory, IO};
 use flags::Flags;
 use stack::Stack;
@@ -51,7 +51,7 @@ impl CPU {
                 Instructions::LD_HLD_A => self.ld_hld_a(),
                 Instructions::BIT_7_H => self.bit_h(Flags::Z as u8),
                 Instructions::JR_NZ_8 => self.jr_nz_8(),
-                Instructions::LD_C_D8 => self.ld_c_d8(),
+                Instructions::LD_C_D8 => self.ld_x_d8(Register::C),
                 Instructions::LD_A_D8 => self.ld_a_d8(),
                 Instructions::LD_FFC_A => self.ld_ffc_a(),
                 Instructions::INC_C => self.inc_c(),
@@ -61,6 +61,7 @@ impl CPU {
                 Instructions::LD_A_DE => self.ld_a_de(),
                 Instructions::CALL_A16 => self.call_a16(),
                 Instructions::LD_C_A => self.ld_c_a(),
+                Instructions::LD_B_D8 => self.ld_x_d8(Register::B),
                 Instructions::Unknown => self.panic(opcode)
             };
             if self.verbose && *instruction != Instructions::Prefixed {
@@ -135,9 +136,19 @@ impl CPU {
         None
     }
 
-    fn ld_c_d8(&mut self) -> Option<Vec<usize>> {
+    fn ld_x_d8(&mut self, register: Register) -> Option<Vec<usize>> {
         let byte = self.read_8();
-        self.registers.set_c(byte);
+        match register {
+            Register::A => self.registers.set_a(byte),
+            Register::B => self.registers.set_b(byte),
+            Register::C => self.registers.set_c(byte),
+            Register::D => self.registers.set_d(byte),
+            Register::E => self.registers.set_e(byte),
+            Register::F => self.registers.set_f(byte),
+            Register::H => self.registers.set_h(byte),
+            Register::L => self.registers.set_l(byte),
+            _ => panic!("Invalid register provided!"),
+        }
         Some(vec![byte as usize])
     }
 
