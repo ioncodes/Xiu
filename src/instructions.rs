@@ -18,10 +18,11 @@ pub enum Instructions {
     LD_C_A,
     INC_C,
     LDH_D8_A,
+    LD_DE_D16,
     Unknown
 }
 
-pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 12] = [
+pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 13] = [
     (0xcb, "", "", Instructions::Prefixed),
     (0x21, "LD HL, d16", "LD HL, ${}", Instructions::LD_HL_D16),
     (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LD_SP_D16),
@@ -33,7 +34,8 @@ pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 12] = 
     (0xe2, "LD ($FF00+C), A", "LD ($FF00+C), A", Instructions::LD_C_A),
     (0x0c, "INC C", "INC C", Instructions::INC_C),
     (0x77, "LD (HL), A ", "LD (HL), A", Instructions::LD_HL_A),
-    (0xe0, "LD ($FF00+d8), A", "LD ($FF00+${}), A", Instructions::LDH_D8_A)
+    (0xe0, "LD ($FF00+d8), A", "LD ($FF00+${}), A", Instructions::LDH_D8_A),
+    (0x11, "LD DE, d16", "LD DE, ${}", Instructions::LD_DE_D16)
 ];
 
 pub static PREFIXED: [(u8, &'static str, &'static str, Instructions); 1] = [
@@ -72,6 +74,7 @@ pub fn get_debug(instr: u8, data: Vec<usize>) -> String {
     let i = find_instruction(instr);
     let mut val = String::from(i.2);
     for d in data {
+        // TODO: implement u8 and u16 formatting (02, 04)
         val = val.replacen("{}", &format!("{:02x}", d), 1)
     }
     val
@@ -81,6 +84,7 @@ pub fn get_prefixed_debug(instr: u8, data: Vec<usize>) -> String {
     let i = find_prefixed_instruction(instr);
     let mut val = String::from(i.2);
     for d in data {
+        // TODO: implement u8 and u16 formatting (02, 04)
         val = val.replacen("{}", &format!("{:02x}", d), 1)
     }
     val

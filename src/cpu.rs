@@ -53,6 +53,7 @@ impl CPU {
                 Instructions::INC_C => self.inc_c(),
                 Instructions::LD_HL_A => self.ld_hl_a(),
                 Instructions::LDH_D8_A => self.ldh_d8_a(),
+                Instructions::LD_DE_D16 => self.ld_de_d16(),
                 Instructions::Unknown => self.panic(opcode)
             };
             if self.verbose && *instruction != Instructions::Prefixed {
@@ -71,7 +72,7 @@ impl CPU {
                         println!("{:?}", get_debug(opcode, vec![]));
                     }
                 }
-                self.registers.dump();
+                //self.registers.dump();
             }
         }
     }
@@ -96,6 +97,12 @@ impl CPU {
     fn ld_sp_d16(&mut self) -> Option<Vec<usize>> {
         let data = self.read_16();
         self.registers.sp = data;
+        Some(vec![data as usize])
+    }
+
+    fn ld_de_d16(&mut self) -> Option<Vec<usize>> {
+        let data = self.read_16();
+        self.registers.set_de(data);
         Some(vec![data as usize])
     }
 
