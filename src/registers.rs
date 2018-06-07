@@ -1,7 +1,3 @@
-/*
-    TODO: fix naming
-*/
-
 use flags::Flags;
 
 pub struct Registers {
