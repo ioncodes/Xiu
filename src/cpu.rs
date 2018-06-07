@@ -53,13 +53,14 @@ impl CPU {
                 Instructions::JR_NZ_8 => self.jr_nz_8(),
                 Instructions::LD_C_D8 => self.ld_c_d8(),
                 Instructions::LD_A_D8 => self.ld_a_d8(),
-                Instructions::LD_C_A => self.ld_c_a(),
+                Instructions::LD_FFC_A => self.ld_ffc_a(),
                 Instructions::INC_C => self.inc_c(),
                 Instructions::LD_HL_A => self.ld_hl_a(),
                 Instructions::LDH_D8_A => self.ldh_d8_a(),
                 Instructions::LD_DE_D16 => self.ld_de_d16(),
                 Instructions::LD_A_DE => self.ld_a_de(),
                 Instructions::CALL_A16 => self.call_a16(),
+                Instructions::LD_C_A => self.ld_c_a(),
                 Instructions::Unknown => self.panic(opcode)
             };
             if self.verbose && *instruction != Instructions::Prefixed {
@@ -147,10 +148,16 @@ impl CPU {
         Some(vec![byte])
     }
 
-    fn ld_c_a(&mut self) -> Option<Vec<usize>> {
+    fn ld_ffc_a(&mut self) -> Option<Vec<usize>> {
         let c = self.registers.get_c() as usize;
         let a = self.registers.get_a();
         self.memory.write((IO.0 as usize) + c, a);
+        None
+    }
+
+    fn ld_c_a(&mut self) -> Option<Vec<usize>> {
+        let a = self.registers.get_a();
+        self.registers.set_c(a);
         None
     }
 
