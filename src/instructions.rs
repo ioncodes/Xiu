@@ -22,10 +22,11 @@ pub enum Instructions {
     LDH_D8_A,
     LD_DE_D16,
     LD_A_DE,
+    CALL_A16,
     Unknown
 }
 
-pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 14] = [
+pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 15] = [
     (0xcb, "", "", Instructions::Prefixed),
     (0x21, "LD HL, d16", "LD HL, ${}", Instructions::LD_HL_D16),
     (0x31, "LD SP, d16", "LD SP, ${}", Instructions::LD_SP_D16),
@@ -39,7 +40,8 @@ pub static INSTRUCTIONS: [(u8, &'static str, &'static str, Instructions); 14] = 
     (0x77, "LD (HL), A ", "LD (HL), A", Instructions::LD_HL_A),
     (0xe0, "LD ($FF00+d8), A", "LD ($FF00+${}), A", Instructions::LDH_D8_A),
     (0x11, "LD DE, d16", "LD DE, ${}", Instructions::LD_DE_D16),
-    (0x1a, "LD A, (DE)", "LD A, (DE)", Instructions::LD_A_DE)
+    (0x1a, "LD A, (DE)", "LD A, (DE)", Instructions::LD_A_DE),
+    (0xcd, "CALL a16", "CALL ${}", Instructions::CALL_A16)
 ];
 
 pub static PREFIXED: [(u8, &'static str, &'static str, Instructions); 1] = [

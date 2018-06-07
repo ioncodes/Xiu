@@ -4,11 +4,13 @@ use instructions::{Instructions, get_instruction, get_debug, get_prefixed_instru
 use registers::Registers;
 use memory::{Memory, IO};
 use flags::Flags;
+use stack::Stack;
 
 pub struct CPU {
     rom: Vec<u8>,
     registers: Registers,
     memory: Memory,
+    stack: Stack,
     verbose: bool
 }
 
@@ -16,6 +18,7 @@ impl CPU {
     pub fn new(rom: String, verbose: bool) -> CPU {
         let registers = Registers::new();
         let memory = Memory::new();
+        let stack = Stack::new();
 
         let mut file = File::open(rom).unwrap();
         let mut rom = Vec::<u8>::new();
@@ -25,7 +28,8 @@ impl CPU {
             rom,
             registers,
             verbose,
-            memory
+            memory,
+            stack,
         }
     }
 
@@ -55,6 +59,7 @@ impl CPU {
                 Instructions::LDH_D8_A => self.ldh_d8_a(),
                 Instructions::LD_DE_D16 => self.ld_de_d16(),
                 Instructions::LD_A_DE => self.ld_a_de(),
+                Instructions::CALL_A16 => self.call_a16(),
                 Instructions::Unknown => self.panic(opcode)
             };
             if self.verbose && *instruction != Instructions::Prefixed {
@@ -98,6 +103,14 @@ impl CPU {
     fn ld_sp_d16(&mut self) -> Option<Vec<usize>> {
         let data = self.read_16();
         self.registers.sp = data;
+        Some(vec![data as usize])
+    }
+
+    fn call_a16(&mut self) -> Option<Vec<usize>> {
+        let data = self.read_16();
+        let address = self.registers.pc;
+        self.stack.push(address);
+        self.registers.jump(data);
         Some(vec![data as usize])
     }
 

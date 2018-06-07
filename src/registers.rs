@@ -314,6 +314,10 @@ impl Registers {
         self.pc = (self.pc as isize + length) as u16;
     }
 
+    pub fn jump(&mut self, address: u16) {
+        self.pc = address;
+    }
+
     pub fn dump(&mut self) {
         println!("A:  ${:02x}", self.get_a());
         println!("B:  ${:02x}", self.get_b());

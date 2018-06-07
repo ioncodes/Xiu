@@ -2,6 +2,7 @@
 
 mod flags;
 mod registers;
+mod stack;
 mod instructions;
 #[allow(dead_code)] // consts are mostly unused atm
 mod memory;
