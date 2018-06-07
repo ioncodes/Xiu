@@ -50,6 +50,7 @@ impl CPU {
                 Instructions::LD_A_D8 => self.ld_a_d8(),
                 Instructions::LD_C_A => self.ld_c_a(),
                 Instructions::INC_C => self.inc_c(),
+                Instructions::LD_HL_A => self.ld_hl_a(),
                 Instructions::Unknown => self.panic(opcode)
             };
             if self.verbose && *instruction != Instructions::Prefixed {
@@ -120,6 +121,14 @@ impl CPU {
         let c = self.registers.get_c() as u16;
         let a = self.registers.get_a();
         self.memory.write((0xff00 + c) as usize, a);
+        None
+    }
+
+    fn ld_hl_a(&mut self) -> Option<Vec<usize>> {
+        // TODO: Not so sure about this tbh
+        let hl = self.registers.get_hl();
+        let a = self.registers.get_a();
+        self.memory.write(hl as usize, a);
         None
     }
 
