@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::Read;
 use instructions::{Instructions, get_instruction, get_debug, get_prefixed_instruction, get_prefixed_debug};
 use registers::Registers;
-use memory::Memory;
+use memory::{Memory, IO};
 
 pub struct CPU {
     rom: Vec<u8>,
@@ -121,14 +121,14 @@ impl CPU {
     fn ldh_d8_a(&mut self) -> Option<Vec<usize>> {
         let byte = self.read_8() as usize;
         let a = self.registers.get_a();
-        self.memory.write(0xff00 + byte, a);
+        self.memory.write((IO.0 as usize) + byte, a);
         Some(vec![byte])
     }
 
     fn ld_c_a(&mut self) -> Option<Vec<usize>> {
-        let c = self.registers.get_c() as u16;
+        let c = self.registers.get_c() as usize;
         let a = self.registers.get_a();
-        self.memory.write((0xff00 + c) as usize, a);
+        self.memory.write((IO.0 as usize) + c, a);
         None
     }
 
