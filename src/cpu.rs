@@ -51,6 +51,7 @@ impl CPU {
                 Instructions::LD_C_A => self.ld_c_a(),
                 Instructions::INC_C => self.inc_c(),
                 Instructions::LD_HL_A => self.ld_hl_a(),
+                Instructions::LDH_D8_A => self.ldh_d8_a(),
                 Instructions::Unknown => self.panic(opcode)
             };
             if self.verbose && *instruction != Instructions::Prefixed {
@@ -115,6 +116,13 @@ impl CPU {
         let byte = self.read_8();
         self.registers.set_c(byte);
         Some(vec![byte as usize])
+    }
+
+    fn ldh_d8_a(&mut self) -> Option<Vec<usize>> {
+        let byte = self.read_8() as usize;
+        let a = self.registers.get_a();
+        self.memory.write(0xff00 + byte, a);
+        Some(vec![byte])
     }
 
     fn ld_c_a(&mut self) -> Option<Vec<usize>> {
